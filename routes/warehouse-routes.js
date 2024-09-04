@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-router.get("/", (_eq, res) => {
+router.get("/", (req, res) => {
   res.send("You have reached /warehouses GET LIST");
 });
 
