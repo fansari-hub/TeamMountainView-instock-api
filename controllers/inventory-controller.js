@@ -19,10 +19,17 @@ const removeInventory = async (req, res) => {
 
 // ************** ADD INVENTORY ************
 const addInventory = async (req, res) => {
-  if (!req.body.warehouse_id || !req.body.item_name || !req.body.description || !req.body.category || !req.body.quantity) {
+  if (!req.body.warehouse_id || !req.body.item_name || !req.body.description || !req.body.category || req.body.quantity===undefined) {
     return res.status(400).json({
       message: "Missing one of the the following fields: warehouse_id, item_name, description, category, quantity",
       data_received: req.body,
+    });
+  }
+
+  console.log(typeof req.body.quantity);
+  if (typeof req.body.quantity !== "number") {
+    return res.status(400).json({
+      message: "Quantity must be a number",
     });
   }
 
