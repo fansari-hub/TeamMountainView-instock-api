@@ -12,8 +12,7 @@ router.use((req, _res, next) => {
 
 
 router.get("/", (req, res) => {
-  //Placeholder: Remove line below when controller is ready to be used.
-  res.send("You have reached /warehouses GET LIST"); 
+  warehouseController.warehouseList(req, res); 
 });
 
 router.post("/", (req, res) => {

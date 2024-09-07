@@ -1,6 +1,16 @@
 const knex = require("knex")(require("../knexfile"));
 
-
+// ************** GET WAREHOUSE LIST ************
+const warehouseList = async (req, res) => {
+  try {
+    const warehouseData = await knex("warehouses");
+    res.json(warehouseData);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to obtain warehouse list: ${error}`,
+    });
+  }
+};
 
 // ************** GET WAREHOUSE BY ID ************
 const getSingleWarehouse = async (req, res) => {
@@ -42,6 +52,7 @@ const removeWarehouse = async (req, res) => {
 
 // ************** EXPORTS************
 module.exports = {
+  warehouseList,
   getSingleWarehouse,
   removeWarehouse,
 };

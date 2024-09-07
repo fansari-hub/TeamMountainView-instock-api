@@ -12,7 +12,6 @@ const inventoryList = async (req, res) => {
         'inventories.category', 
         'inventories.status', 
         'inventories.quantity');
-    // console.log(inventoryData);
         res.json(inventoryData);
   } catch (error) {
     res.status(500).json({
