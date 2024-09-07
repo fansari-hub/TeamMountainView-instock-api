@@ -10,8 +10,8 @@ const PORT = process.env.PORT;
 
 const warehouseRoutes = require('./routes/warehouse-routes.js')
 const inventoryRoutes = require('./routes/inventory-routes.js')
-app.use('/warehouses', warehouseRoutes );
-app.use('/inventory', inventoryRoutes);
+app.use('/api/warehouses', warehouseRoutes );
+app.use('/api/inventory', inventoryRoutes);
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
