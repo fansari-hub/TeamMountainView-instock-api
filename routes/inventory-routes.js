@@ -31,8 +31,7 @@ router.delete("/:id", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-   //Placeholder: Remove line below when controller is ready to be used.
-  res.send("You have reached /inventory ID PUT");
+  inventoryController.updateInventory(req, res);
 });
 
 // ************** EXPORTS************
