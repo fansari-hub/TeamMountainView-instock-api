@@ -31,8 +31,7 @@ router.get("/:id/inventories", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-   //Placeholder: Remove line below when controller is ready to be used.
-  res.send("You have reached /warehouses ID DELETE");
+  warehouseController.removeWarehouse(req, res);
 });
 
 router.put("/:id", (req, res) => {
