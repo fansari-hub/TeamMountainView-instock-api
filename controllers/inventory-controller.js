@@ -1,5 +1,25 @@
 const knex = require("knex")(require("../knexfile"));
-
+// ************** GET INVENTORY LIST ************
+const inventoryList = async (req, res) => {
+  try {
+    const inventoryData = await knex("inventories")
+      .join('warehouses', 'inventories.warehouse_id', 'warehouses.id')
+      .select(
+        'inventories.id', 
+        'warehouses.warehouse_name', 
+        'inventories.item_name', 
+        'inventories.description', 
+        'inventories.category', 
+        'inventories.status', 
+        'inventories.quantity');
+    // console.log(inventoryData);
+        res.json(inventoryData);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to obtain inventory list: ${error}`,
+    });
+  }
+};
 // ************** REMOVE INVENTORY ************
 const removeInventory = async (req, res) => {
   try {
@@ -152,6 +172,7 @@ const updateInventory = async (req, res) => {
 
 // ************** EXPORTS************
 module.exports = {
+  inventoryList,
   removeInventory,
   addInventory,
   updateInventory,
