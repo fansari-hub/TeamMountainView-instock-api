@@ -34,6 +34,54 @@ const getSingleWarehouse = async (req, res) => {
   }
 };
 
+// ************** ADD NEW WAREHOUSE ************
+const addWarehouse = async (req, res) => {
+  //check for missing fields
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    return res.status(400).json({
+      message: "Missing one or more required fields",
+      data_received: req.body,
+    });
+  }
+  //validate phone number has exactly 11 digits
+  if (req.body.contact_phone.replace(/\D/g, "").length !== 11) {
+    return res.status(400).json({
+      message:
+        "Invalid phone number. It must contain 11 digits including area code",
+    });
+  }
+
+  //validate email ends with "@instock.com"
+  if (!req.body.contact_email.endsWith("@instock.com")) {
+    return res.status(400).json({
+      message: "Invalid email. It must have the domain @instock.com",
+    });
+  }
+
+  //update database
+  try {
+    const result = await knex("warehouses").insert(req.body);
+    const newWarehouseId = result[0];
+    const createdWarehouse = await knex("warehouses").where({
+      id: newWarehouseId,
+    });
+    res.status(201).json(createdWarehouse[0]);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new inventory item: ${error}`,
+    });
+  }
+};
+
 // ************** EDIT/PUT WAREHOUSE BY ID ************
 const updateWarehouse = async (req, res) => {
   //check if warehouse exists
@@ -130,4 +178,5 @@ module.exports = {
   getSingleWarehouse,
   removeWarehouse,
   updateWarehouse,
+  addWarehouse,
 };

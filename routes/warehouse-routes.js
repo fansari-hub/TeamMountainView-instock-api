@@ -18,8 +18,7 @@ router
     warehouseController.warehouseList(req, res);
   })
   .post((req, res) => {
-    // Placeholder: Remove line below when controller is ready to be used.
-    res.send("You have reached /warehouses POST");
+    warehouseController.addWarehouse(req, res);
   });
 
 router
