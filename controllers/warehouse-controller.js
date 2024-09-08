@@ -172,6 +172,30 @@ const removeWarehouse = async (req, res) => {
   }
 };
 
+// ************** GET INVENTORY BY WAREHOUSE ID ************
+const getInventoryForWarehouse = async (req, res) => {
+  try {
+    const inventoryForWarehouseFound = await knex("inventories")
+      .where({
+        warehouse_id: req.params.id,
+      })
+      .select("id", "item_name", "category", "status", "quantity");
+
+    if (inventoryForWarehouseFound.length === 0) {
+      return res.status(404).json({
+        message: `Inventory with warehouse_ID ${req.params.id} not found.`,
+      });
+    }
+
+    const inventoryForWarehouse = inventoryForWarehouseFound;
+    res.json(inventoryForWarehouse);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve inventory data for warehouse_ID ${req.params.id}`,
+    });
+  }
+};
+
 // ************** EXPORTS************
 module.exports = {
   warehouseList,
@@ -179,4 +203,5 @@ module.exports = {
   removeWarehouse,
   updateWarehouse,
   addWarehouse,
+  getInventoryForWarehouse,
 };

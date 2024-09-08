@@ -34,8 +34,7 @@ router
   });
 
 router.get("/:id/inventories", (req, res) => {
-  // Placeholder: Remove line below when controller is ready to be used.
-  res.send("You have reached /warehouses ID GET inventory LIST");
+  warehouseController.getInventoryForWarehouse(req, res);
 });
 
 // router.get("/", (req, res) => {
