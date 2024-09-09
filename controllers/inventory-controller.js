@@ -25,9 +25,20 @@ const inventoryList = async (req, res) => {
 
 const getSingleItem = async (req, res) => {
   try {
-    const inventoryItemFound = await knex("inventories").where({
-      id: req.params.id,
-    });
+    const inventoryItemFound = await knex("inventories")
+      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where({
+        "inventories.id": req.params.id,
+      });
 
     if (inventoryItemFound.length === 0) {
       return res.status(404).json({
