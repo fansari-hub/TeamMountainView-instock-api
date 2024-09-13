@@ -34,7 +34,8 @@ const getSingleItem = async (req, res) => {
         "inventories.description",
         "inventories.category",
         "inventories.status",
-        "inventories.quantity"
+        "inventories.quantity",
+        "inventories.warehouse_id"
       )
       .where({
         "inventories.id": req.params.id,
