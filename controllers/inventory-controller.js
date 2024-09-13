@@ -4,7 +4,7 @@ const inventoryList = async (req, res) => {
   let {sort_by, order_by} = req.query;
 
   if (!sort_by) {
-    sort_by = 'warehouses.warehouse_name';
+    sort_by = 'inventories.id';
   }
 
   if (order_by && order_by.toLowerCase() !=='asc' && order_by.toLowerCase()  !=='desc') {
