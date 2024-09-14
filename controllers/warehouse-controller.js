@@ -2,8 +2,20 @@ const knex = require("knex")(require("../knexfile"));
 
 // ************** GET WAREHOUSE LIST ************
 const warehouseList = async (req, res) => {
+  let { sort_by, order_by } = req.query;
+
+  if (!sort_by) {
+    sort_by = "id";
+  }
+
+  if (order_by && order_by.toLowerCase() !== "asc" && order_by.toLowerCase() !== "desc") {
+    order_by = "asc";
+  }
+
   try {
-    const warehouseData = await knex("warehouses");
+    const warehouseData = await knex("warehouses")
+    .orderBy(sort_by, order_by);
+
     res.json(warehouseData);
   } catch (error) {
     res.status(500).json({
@@ -37,16 +49,7 @@ const getSingleWarehouse = async (req, res) => {
 // ************** ADD NEW WAREHOUSE ************
 const addWarehouse = async (req, res) => {
   //check for missing fields
-  if (
-    !req.body.warehouse_name ||
-    !req.body.address ||
-    !req.body.city ||
-    !req.body.country ||
-    !req.body.contact_name ||
-    !req.body.contact_position ||
-    !req.body.contact_phone ||
-    !req.body.contact_email
-  ) {
+  if (!req.body.warehouse_name || !req.body.address || !req.body.city || !req.body.country || !req.body.contact_name || !req.body.contact_position || !req.body.contact_phone || !req.body.contact_email) {
     return res.status(400).json({
       message: "Missing one or more required fields",
       data_received: req.body,
@@ -55,8 +58,7 @@ const addWarehouse = async (req, res) => {
   //validate phone number has exactly 11 digits
   if (req.body.contact_phone.replace(/\D/g, "").length !== 11) {
     return res.status(400).json({
-      message:
-        "Invalid phone number. It must contain 11 digits including area code",
+      message: "Invalid phone number. It must contain 11 digits including area code",
     });
   }
 
@@ -102,16 +104,7 @@ const updateWarehouse = async (req, res) => {
   }
 
   //check for missing fields
-  if (
-    !req.body.warehouse_name ||
-    !req.body.address ||
-    !req.body.city ||
-    !req.body.country ||
-    !req.body.contact_name ||
-    !req.body.contact_position ||
-    !req.body.contact_phone ||
-    !req.body.contact_email
-  ) {
+  if (!req.body.warehouse_name || !req.body.address || !req.body.city || !req.body.country || !req.body.contact_name || !req.body.contact_position || !req.body.contact_phone || !req.body.contact_email) {
     return res.status(400).json({
       message: "Missing one or more required fields",
       data_received: req.body,
@@ -122,8 +115,7 @@ const updateWarehouse = async (req, res) => {
 
   if (req.body.contact_phone.replace(/\D/g, "").length !== 11) {
     return res.status(400).json({
-      message:
-        "Invalid phone number. It must contain 11 digits including area code",
+      message: "Invalid phone number. It must contain 11 digits including area code",
     });
   }
 
@@ -136,9 +128,7 @@ const updateWarehouse = async (req, res) => {
 
   //update database
   try {
-    const _result = await knex("warehouses")
-      .where({ id: req.params.id })
-      .update(req.body);
+    const _result = await knex("warehouses").where({ id: req.params.id }).update(req.body);
 
     const updatedWarehouse = await knex("warehouses").where({
       id: req.params.id,
@@ -154,9 +144,7 @@ const updateWarehouse = async (req, res) => {
 // ************** REMOVE WAREHOUSE ************
 const removeWarehouse = async (req, res) => {
   try {
-    const rowsDeleted = await knex("warehouses")
-      .where({ id: req.params.id })
-      .delete();
+    const rowsDeleted = await knex("warehouses").where({ id: req.params.id }).delete();
 
     if (rowsDeleted === 0) {
       return res.status(404).json({
@@ -174,12 +162,21 @@ const removeWarehouse = async (req, res) => {
 
 // ************** GET INVENTORY BY WAREHOUSE ID ************
 const getInventoryForWarehouse = async (req, res) => {
+  let { sort_by, order_by } = req.query;
+
+  if (!sort_by) {
+    sort_by = "id";
+  }
+
+  if (order_by && order_by.toLowerCase() !== "asc" && order_by.toLowerCase() !== "desc") {
+    order_by = "asc";
+  }
+
   try {
     const inventoryForWarehouseFound = await knex("inventories")
-      .where({
-        warehouse_id: req.params.id,
-      })
-      .select("id", "item_name", "category", "status", "quantity");
+    .select("id", "item_name", "category", "status", "quantity")
+    .where({ warehouse_id: req.params.id })
+    .orderBy(sort_by, order_by);
 
     if (inventoryForWarehouseFound.length === 0) {
       return res.status(404).json({

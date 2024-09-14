@@ -1,6 +1,16 @@
 const knex = require("knex")(require("../knexfile"));
 // ************** GET INVENTORY LIST ************
 const inventoryList = async (req, res) => {
+  let {sort_by, order_by} = req.query;
+
+  if (!sort_by) {
+    sort_by = 'inventories.id';
+  }
+
+  if (order_by && order_by.toLowerCase() !=='asc' && order_by.toLowerCase()  !=='desc') {
+    order_by = 'asc';
+  }
+
   try {
     const inventoryData = await knex("inventories")
       .join("warehouses", "inventories.warehouse_id", "warehouses.id")
@@ -12,7 +22,7 @@ const inventoryList = async (req, res) => {
         "inventories.category",
         "inventories.status",
         "inventories.quantity"
-      );
+      ).orderBy(sort_by, order_by);
     res.json(inventoryData);
   } catch (error) {
     res.status(500).json({
