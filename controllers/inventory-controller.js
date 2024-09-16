@@ -1,28 +1,18 @@
 const knex = require("knex")(require("../knexfile"));
 // ************** GET INVENTORY LIST ************
 const inventoryList = async (req, res) => {
-  let {sort_by, order_by} = req.query;
+  let { sort_by, order_by } = req.query;
 
   if (!sort_by) {
-    sort_by = 'inventories.id';
+    sort_by = "inventories.id";
   }
 
-  if (order_by && order_by.toLowerCase() !=='asc' && order_by.toLowerCase()  !=='desc') {
-    order_by = 'asc';
+  if (order_by && order_by.toLowerCase() !== "asc" && order_by.toLowerCase() !== "desc") {
+    order_by = "asc";
   }
 
   try {
-    const inventoryData = await knex("inventories")
-      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
-      .select(
-        "inventories.id",
-        "warehouses.warehouse_name",
-        "inventories.item_name",
-        "inventories.description",
-        "inventories.category",
-        "inventories.status",
-        "inventories.quantity"
-      ).orderBy(sort_by, order_by);
+    const inventoryData = await knex("inventories").join("warehouses", "inventories.warehouse_id", "warehouses.id").select("inventories.id", "warehouses.warehouse_name", "inventories.item_name", "inventories.description", "inventories.category", "inventories.status", "inventories.quantity").orderBy(sort_by, order_by);
     res.json(inventoryData);
   } catch (error) {
     res.status(500).json({
@@ -35,21 +25,9 @@ const inventoryList = async (req, res) => {
 
 const getSingleItem = async (req, res) => {
   try {
-    const inventoryItemFound = await knex("inventories")
-      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
-      .select(
-        "inventories.id",
-        "warehouses.warehouse_name",
-        "inventories.item_name",
-        "inventories.description",
-        "inventories.category",
-        "inventories.status",
-        "inventories.quantity",
-        "inventories.warehouse_id"
-      )
-      .where({
-        "inventories.id": req.params.id,
-      });
+    const inventoryItemFound = await knex("inventories").join("warehouses", "inventories.warehouse_id", "warehouses.id").select("inventories.id", "warehouses.warehouse_name", "inventories.item_name", "inventories.description", "inventories.category", "inventories.status", "inventories.quantity", "inventories.warehouse_id").where({
+      "inventories.id": req.params.id,
+    });
 
     if (inventoryItemFound.length === 0) {
       return res.status(404).json({
@@ -69,9 +47,7 @@ const getSingleItem = async (req, res) => {
 // ************** REMOVE INVENTORY ************
 const removeInventory = async (req, res) => {
   try {
-    const rowsDeleted = await knex("inventories")
-      .where({ id: req.params.id })
-      .delete();
+    const rowsDeleted = await knex("inventories").where({ id: req.params.id }).delete();
 
     if (rowsDeleted === 0) {
       return res.status(404).json({
@@ -90,16 +66,9 @@ const removeInventory = async (req, res) => {
 // ************** ADD INVENTORY ************
 const addInventory = async (req, res) => {
   //Check for missing fields
-  if (
-    !req.body.warehouse_id ||
-    !req.body.item_name ||
-    !req.body.description ||
-    !req.body.category ||
-    req.body.quantity === undefined
-  ) {
+  if (!req.body.warehouse_id || !req.body.item_name || !req.body.description || !req.body.category || req.body.quantity === undefined) {
     return res.status(400).json({
-      message:
-        "Missing one of the the following fields: warehouse_id, item_name, description, category, quantity",
+      message: "Missing one of the the following fields: warehouse_id, item_name, description, category, quantity",
       data_received: req.body,
     });
   }
@@ -177,16 +146,9 @@ const updateInventory = async (req, res) => {
   }
 
   //check for missing fields
-  if (
-    !req.body.warehouse_id ||
-    !req.body.item_name ||
-    !req.body.description ||
-    !req.body.category ||
-    req.body.quantity === undefined
-  ) {
+  if (!req.body.warehouse_id || !req.body.item_name || !req.body.description || !req.body.category || req.body.quantity === undefined) {
     return res.status(400).json({
-      message:
-        "Missing one of the the following fields: warehouse_id, item_name, description, category, quantity",
+      message: "Missing one of the the following fields: warehouse_id, item_name, description, category, quantity",
       data_received: req.body,
     });
   }
@@ -232,9 +194,7 @@ const updateInventory = async (req, res) => {
 
   //update database
   try {
-    const _result = await knex("inventories")
-      .update(inventoryItem)
-      .where({ id: req.params.id });
+    const _result = await knex("inventories").update(inventoryItem).where({ id: req.params.id });
     const updatedInventory = await knex("inventories").where({
       id: req.params.id,
     });

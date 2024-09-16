@@ -6,9 +6,7 @@ const SERVER_LOGGING = true;
 router.use((req, _res, next) => {
   next();
   if (SERVER_LOGGING) {
-    console.log(
-      `Requested METHOD: ${req.method} | ENDPOINT: ${req.originalUrl} | CODE: ${req.res.statusCode}`
-    );
+    console.log(`Requested METHOD: ${req.method} | ENDPOINT: ${req.originalUrl} | CODE: ${req.res.statusCode}`);
   }
 });
 
@@ -32,26 +30,6 @@ router
   .put((req, res) => {
     inventoryController.updateInventory(req, res);
   });
-
-// router.get("/", (req, res) => {
-//   inventoryController.inventoryList(req, res);
-// });
-
-// router.post("/", (req, res) => {
-//   inventoryController.addInventory(req, res);
-// });
-
-// router.get("/:id", (req, res) => {
-//   inventoryController.getSingleItem(req, res);
-// });
-
-// router.delete("/:id", (req, res) => {
-//   inventoryController.removeInventory(req, res);
-// });
-
-// router.put("/:id", (req, res) => {
-//   inventoryController.updateInventory(req, res);
-// });
 
 // ************** EXPORTS************
 module.exports = router;

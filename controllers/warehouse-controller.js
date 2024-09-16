@@ -13,8 +13,7 @@ const warehouseList = async (req, res) => {
   }
 
   try {
-    const warehouseData = await knex("warehouses")
-    .orderBy(sort_by, order_by);
+    const warehouseData = await knex("warehouses").orderBy(sort_by, order_by);
 
     res.json(warehouseData);
   } catch (error) {
@@ -173,10 +172,7 @@ const getInventoryForWarehouse = async (req, res) => {
   }
 
   try {
-    const inventoryForWarehouseFound = await knex("inventories")
-    .select("id", "item_name", "category", "status", "quantity")
-    .where({ warehouse_id: req.params.id })
-    .orderBy(sort_by, order_by);
+    const inventoryForWarehouseFound = await knex("inventories").select("id", "item_name", "category", "status", "quantity").where({ warehouse_id: req.params.id }).orderBy(sort_by, order_by);
 
     if (inventoryForWarehouseFound.length === 0) {
       return res.status(404).json({
